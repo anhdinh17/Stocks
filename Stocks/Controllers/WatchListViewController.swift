@@ -109,8 +109,22 @@ extension WatchListViewController: UISearchResultsUpdating {
 extension WatchListViewController: SearchResultsViewControllerDelegate {
     
     func searchResultsViewControllerDelegate(searchResult: SearchResult) {
+        // Resign keyboard:
+        // because search bar is in navigation bar, so we use this syntax
+        navigationItem.searchController?.searchBar.resignFirstResponder()
+        
         // Present Stock details
-        print("Did select: \(searchResult.displaySymbol)")
+        /* Cách 1:
+         let vc = StockDetailsViewController()
+         vc.title = searchResult.description
+         navigationController?.pushViewController(vc, animated: true)
+        */
+       
+        // Cách 2:
+        let vc = StockDetailsViewController()
+        vc.title = searchResult.description
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true, completion: nil)
     }
 
 }
