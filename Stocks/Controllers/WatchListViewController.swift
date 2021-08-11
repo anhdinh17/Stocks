@@ -9,6 +9,9 @@ import UIKit
 
 class WatchListViewController: UIViewController {
 
+    // this one is used for reducing the number of times we call API search() when we hit keyboard
+    private var searchTimer: Timer?
+    
 //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,16 +74,43 @@ extension WatchListViewController: UISearchResultsUpdating {
             return
         }
         
-        // Update results controller
-        resultsVC.update(with: ["GOOGL"])
+        /*
+        The whole timer thing means: everytime user hit a key on keyboard, it resets the timer then kick off new timer to search for API.
+         Khi user bấm 1 phím trên keyboard, 0.3 giây sau API call sẽ chạy, vậy nếu khoảng thời gian giữa mỗi lần bấm từ 0.3 trở xuống thì API call sẽ không chạy. Vậy sẽ giúp làm giảm số lần gọi API
+        */
+        
+        // Reset timer
+        searchTimer?.invalidate()
+        
+        // Kick off new timer
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: { _ in
+            // Call API to search
+            APICaller.shared.search(query: query) { result in
+                switch result {
+                case .success(let response): // response là 1 SearchResponse Object
+                    DispatchQueue.main.async {
+                        // Update results controller
+                        resultsVC.update(with: response.result)
+                    }
+                case.failure(let error):
+                    // update the table view with empty array
+                    DispatchQueue.main.async {
+                        resultsVC.update(with: [])
+                    }
+                    print(error)
+                }
+            }
+        })
     }
+    
 }
 
 //MARK: - Protocol Func from SearchResultsViewController
 extension WatchListViewController: SearchResultsViewControllerDelegate {
     
-    func searchResultsViewControllerDelegate(searchResult: String) {
+    func searchResultsViewControllerDelegate(searchResult: SearchResult) {
         // Present Stock details
+        print("Did select: \(searchResult.displaySymbol)")
     }
 
 }

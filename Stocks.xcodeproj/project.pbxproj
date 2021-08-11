@@ -20,6 +20,7 @@
 		67A9D0DE26AE778B00B6CBA2 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A9D0DD26AE778B00B6CBA2 /* HapticsManager.swift */; };
 		67D4C6C226C1855400186786 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D4C6C126C1855400186786 /* Extensions.swift */; };
 		67D4C6C426C1BA3800186786 /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D4C6C326C1BA3800186786 /* SearchResultTableViewCell.swift */; };
+		67D4C6C626C331A900186786 /* SearchResonse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D4C6C526C331A900186786 /* SearchResonse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		67A9D0DD26AE778B00B6CBA2 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		67D4C6C126C1855400186786 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		67D4C6C326C1BA3800186786 /* SearchResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTableViewCell.swift; sourceTree = "<group>"; };
+		67D4C6C526C331A900186786 /* SearchResonse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResonse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 		677C465826AD189200954DD9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				67D4C6C526C331A900186786 /* SearchResonse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				677C464926AD184A00954DD9 /* WatchListViewController.swift in Sources */,
 				67A9D0DC26AE774800B6CBA2 /* PersistenceManager.swift in Sources */,
 				67D4C6C226C1855400186786 /* Extensions.swift in Sources */,
+				67D4C6C626C331A900186786 /* SearchResonse.swift in Sources */,
 				67A9D0DA26AE76FF00B6CBA2 /* APICaller.swift in Sources */,
 				677C464526AD184A00954DD9 /* AppDelegate.swift in Sources */,
 				677C464726AD184A00954DD9 /* SceneDelegate.swift in Sources */,

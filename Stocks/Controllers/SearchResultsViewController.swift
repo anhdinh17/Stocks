@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SearchResultsViewControllerDelegate: AnyObject {
-    func searchResultsViewControllerDelegate(searchResult: String)
+    func searchResultsViewControllerDelegate(searchResult: SearchResult)
 }
 
 class SearchResultsViewController: UIViewController {
@@ -21,10 +21,11 @@ class SearchResultsViewController: UIViewController {
         // Register a Cell
         table.register(SearchResultTableViewCell.self,
                        forCellReuseIdentifier: SearchResultTableViewCell.identifier)
+        table.isHidden = true
         return table
     }()
     
-    private var result: [String] = []
+    private var result: [SearchResult] = []
     
 //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -48,29 +49,34 @@ class SearchResultsViewController: UIViewController {
         tableView.dataSource = self
     }
     
-    public func update(with result: [String]){
+    public func update(with result: [SearchResult]){
         self.result = result
+        tableView.isHidden = result.isEmpty
         tableView.reloadData()
     }
 
 }
 
+//MARK: - TableView Delegate, DataSource
 extension SearchResultsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return result.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultTableViewCell.identifier, for: indexPath)
         
-        cell.textLabel?.text = "AAPL"
-        cell.detailTextLabel?.text = "Apple Inc."
+        let model = result[indexPath.row]
+        
+        cell.textLabel?.text = model.symbol
+        cell.detailTextLabel?.text = model.description
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        delegate?.searchResultsViewControllerDelegate(searchResult: "AAPL")
+        let model = result[indexPath.row]
+        delegate?.searchResultsViewControllerDelegate(searchResult: model)
     }
 }
