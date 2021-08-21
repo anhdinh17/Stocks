@@ -22,7 +22,7 @@ final class APICaller {
     }
     
     private enum Endpoint: String {
-        case search = "search"
+        case search = "search" // endpoint used for url
     }
     
     private enum APIError: Error {
@@ -31,7 +31,7 @@ final class APICaller {
     }
     
 //MARK: - Public
-    
+    // This func is to search for 1 stock symbol
     public func search(
         query: String,
         completion: @escaping(Result<SearchResponse,Error>) -> Void){

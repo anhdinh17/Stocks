@@ -77,6 +77,8 @@ extension SearchResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = result[indexPath.row]
+        
+        // model là 1 object SearchResult, pass back to WatchListViewController
         delegate?.searchResultsViewControllerDelegate(searchResult: model)
     }
 }

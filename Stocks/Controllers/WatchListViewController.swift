@@ -6,11 +6,15 @@
 //
 
 import UIKit
+import FloatingPanel
 
 class WatchListViewController: UIViewController {
 
     // this one is used for reducing the number of times we call API search() when we hit keyboard
     private var searchTimer: Timer?
+    
+    // Floating panel
+    private var panel: FloatingPanelController?
     
 //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -21,12 +25,14 @@ class WatchListViewController: UIViewController {
         setUpSearchController()
         
         setUpTitleView()
+        
+        setUpFoatingPanel()
     }
     
 //MARK: - Functions
     private func setUpSearchController(){
         let resultVC = SearchResultsViewController()
-        resultVC.delegate = self // set cai nay để xài protocol func
+        resultVC.delegate = self // set cai nay để xài delegate func của SearchResultViewController
         
         let searchVC = UISearchController(searchResultsController: resultVC)
         // this one is for the protocol UISearchResultsUpdating
@@ -59,6 +65,18 @@ class WatchListViewController: UIViewController {
         titleView.addSubview(label)
         
     }
+    
+    private func setUpFoatingPanel(){
+        // this vc will be added to the panel
+        let vc = NewsViewController(type: .topStories)
+        
+        // Create a panel and add it to this VC
+        let panel = FloatingPanelController(delegate: self) // syntax này cũng để set this VC là delegate để xài delegate func, ko xài cách này thì set panel.delegate = self cũng giống nhau
+        panel.surfaceView.backgroundColor = .secondarySystemBackground
+        panel.addPanel(toParent: self)
+        panel.set(contentViewController: vc)
+        panel.track(scrollView: vc.tableView)
+    }
 
 }
 
@@ -68,6 +86,7 @@ extension WatchListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let query = searchController.searchBar.text,
               // cast down to SearchResultsVC để xài VC này to display searching results.
+              // dòng này là 1 trong những bước của process tạo search bar.
               let resultsVC = searchController.searchResultsController as? SearchResultsViewController,
               // trim out all white spaces and the text is not empty
               !query.trimmingCharacters(in: .whitespaces).isEmpty else {
@@ -127,4 +146,13 @@ extension WatchListViewController: SearchResultsViewControllerDelegate {
         present(navVC, animated: true, completion: nil)
     }
 
+}
+
+//MARK: - Delegate of FloatingPanel
+extension WatchListViewController: FloatingPanelControllerDelegate {
+    // This func is to track the state of the floating panel, when it's tip, half or full screen.
+    func floatingPanelDidChangePosition(_ fpc: FloatingPanelController) {
+        // when panel is full screen, the title of the Navbar is hidden
+        navigationItem.titleView?.isHidden = fpc.state == .full
+    }
 }
