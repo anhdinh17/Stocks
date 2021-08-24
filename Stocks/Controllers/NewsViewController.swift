@@ -17,11 +17,24 @@ class NewsViewController: UIViewController {
         table.register(NewsHeaderView.self,
                        forHeaderFooterViewReuseIdentifier: NewsHeaderView.identifier)
         
+        // Register cell
+        table.register(NewsStoryTableViewCell.self,
+                       forCellReuseIdentifier: NewsStoryTableViewCell.identifier)
+        
         return table
     }()
  
     // Array of stories
-    private var stories = [String]()
+    private var stories: [NewsStory]  = [
+        NewsStory(category: "Tech",
+                  datetime: Double(Date().timeIntervalSince1970),
+                  headline: "Some headline should go here",
+                  image: "",
+                  related: "Related",
+                  source: "CNN",
+                  summary: "",
+                  url: "")
+    ]
     
     private var type: Type
     
@@ -85,15 +98,25 @@ class NewsViewController: UIViewController {
 extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return stories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: NewsStoryTableViewCell.identifier, for: indexPath) as? NewsStoryTableViewCell else {
+            fatalError()
+        }
+        
+        /*
+        .init is short form of NewsStoryTableViewCell.ViewModel()
+        each item is an object of NewsStory
+        */
+        cell.configure(with: .init(model: stories[indexPath.row]))
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 140
+        return NewsStoryTableViewCell.preferredHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -75,7 +75,7 @@ final class APICaller {
             request(url: url(for: .companyNews,
                              queryParams: [
                                 "symbol" : symbol,
-                                "from" : DateFormatter.newsDateFormatter.string(from: oneMonthBack), // use extension to get the TimeInterval as String with the form of "YYYY-MM-dd"
+                                "from" : DateFormatter.newsDateFormatter.string(from: oneMonthBack), // Use extension to convert Date() to String under the form of "YYYY-MM-dd"
                                 "to" : DateFormatter.newsDateFormatter.string(from: today)
                              ]),
                     expecting: [NewsStory].self,
