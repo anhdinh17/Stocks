@@ -14,6 +14,8 @@ final class APICaller {
         static let apiKey = "c49egvaad3ieskgqt8o0"
         static let sandboxApiKey = "sandbox_c49egvaad3ieskgqt8og"
         static let baseUrl = "https://finnhub.io/api/v1/"
+        // this line used for calculating a day second to used for "news" func
+        static let day: TimeInterval = 3600 * 24
     }
     
     // Luôn có thằng quỷ này
@@ -23,6 +25,8 @@ final class APICaller {
     
     private enum Endpoint: String {
         case search = "search" // endpoint used for url
+        case topStories = "news"
+        case companyNews = "company-news"
     }
     
     private enum APIError: Error {
@@ -30,7 +34,7 @@ final class APICaller {
         case invalidUrl
     }
     
-//MARK: - Public
+//MARK: - Public - Search
     // This func is to search for 1 stock symbol
     public func search(
         query: String,
@@ -49,10 +53,40 @@ final class APICaller {
                 expecting: SearchResponse.self,
                 completion: completion) // the completion of the request func is the same as this search func, so we can use this SYNTAX
     }
+    
+//MARK: - News func
+    // This func is to get the news from 7 days ago till today
+    public func news(for type: NewsViewController.`Type`,
+                      completion: @escaping (Result<[NewsStory],Error>) -> Void
+    ){
+        /*
+        We have 2 types of news. 1 for general "Top Stories", 1 for specific company.
+        That's why we need to switch
+        */
+        switch type {
+        case .topStories:
+            request(url: url(for: .topStories, queryParams: ["category" : "general"]),
+                    expecting: [NewsStory].self,
+                    completion: completion)
+        case .company(let symbol):
+            let today = Date()
+            // time from last 7 days
+            let oneMonthBack = today.addingTimeInterval(-(Constants.day * 7))
+            request(url: url(for: .companyNews,
+                             queryParams: [
+                                "symbol" : symbol,
+                                "from" : DateFormatter.newsDateFormatter.string(from: oneMonthBack), // use extension to get the TimeInterval as String with the form of "YYYY-MM-dd"
+                                "to" : DateFormatter.newsDateFormatter.string(from: today)
+                             ]),
+                    expecting: [NewsStory].self,
+                    completion: completion)
+        }
+        
+    }
 
 //MARK: - URL func
     /* this func is to create a url string
-     Có thể xem cả func này là công thức để tạo generic url string
+     Có thể xem cả func này là công thức để tạo url string
      */
     private func url(
         for endpoint: Endpoint,
@@ -79,9 +113,10 @@ final class APICaller {
         // Convert query items to suffix string
         // map là chuyển mỗi element thành dạng ví dụ q=apple,token=api key bởi vì queriItems chỉ là 1 array của dictionary
         // joined là gắn các element lại và add "&" vô giữa mỗi element
+        // the example of a url string after being created: In this case, end point is "search", q = Apple https://finnhub.io/api/v1/search?q=Apple&token=c49egvaad3ieskgqt8o0
         urlString += "?" + queryItems.map{"\($0.name)=\($0.value ?? "")"}.joined(separator: "&")
         
-        print("\n \(urlString)")
+        print("\n The url string created by url func: \(urlString)")
         
         return URL(string: urlString)
     }
@@ -90,7 +125,7 @@ final class APICaller {
     // T is the codable Object(struct) that we normally create to store data from API call
     private func request<T: Codable>(
         url: URL?,
-        expecting: T.Type,
+        expecting: T.Type, // Expecting is the form of the JSON.For example: Object or array of Object
         completion: @escaping (Result<T, Error>) -> Void
     ){
         guard let url = url else {
