@@ -69,13 +69,13 @@ class WatchListViewController: UIViewController {
 //MARK: - Floating panel
     private func setUpFoatingPanel(){
         // this vc will be added to the panel
-        let vc = NewsViewController(type: .topStories)
+        let vc = NewsViewController(type: .company(symbol: "FB"))
         
         // Create a panel and add it to this VC
         let panel = FloatingPanelController(delegate: self) // syntax này cũng để set this VC là delegate để xài delegate func, ko xài cách này thì set panel.delegate = self cũng giống nhau
         panel.surfaceView.backgroundColor = .secondarySystemBackground
         panel.addPanel(toParent: self)
-        panel.set(contentViewController: vc)
+        panel.set(contentViewController: vc) // add NewsViewController() to floating panel
         panel.track(scrollView: vc.tableView)
     }
 

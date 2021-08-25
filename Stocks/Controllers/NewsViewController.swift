@@ -5,6 +5,7 @@
 //  Created by Anh Dinh on 7/24/21.
 //
 
+import SafariServices
 import UIKit
 
 class NewsViewController: UIViewController {
@@ -25,16 +26,7 @@ class NewsViewController: UIViewController {
     }()
  
     // Array of stories
-    private var stories: [NewsStory]  = [
-        NewsStory(category: "Tech",
-                  datetime: Double(Date().timeIntervalSince1970),
-                  headline: "Some headline should go here",
-                  image: "",
-                  related: "Related",
-                  source: "CNN",
-                  summary: "",
-                  url: "")
-    ]
+    private var stories = [NewsStory]()
     
     private var type: Type
     
@@ -85,11 +77,24 @@ class NewsViewController: UIViewController {
     }
 
     private func fetchNews(){
-        
+        APICaller.shared.news(for: type) { [weak self] result in
+            switch result {
+            case .success(let stories):
+                DispatchQueue.main.async {
+                    // set "stories" of this class = stories received from the call.
+                    // Which is an array of [NewsStory]
+                    self?.stories = stories
+                    self?.tableView.reloadData()
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     private func open(url: URL){
-        
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
     }
     
 }
@@ -101,6 +106,7 @@ extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
         return stories.count
     }
     
+    // Custom Cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NewsStoryTableViewCell.identifier, for: indexPath) as? NewsStoryTableViewCell else {
             fatalError()
@@ -119,8 +125,21 @@ extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
         return NewsStoryTableViewCell.preferredHeight
     }
     
+    // Select 1 cell
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // get 1 object of stories array, which is a NewsStory object
+        let story = stories[indexPath.row]
+        
+        // convert url String to URL
+        guard let url = URL(string:story.url) else {
+            presentFailedToOpenAlert()
+            return
+        }
+        
+        // Open the page of the news
+        open(url: url)
     }
     
     // Header height
@@ -141,6 +160,17 @@ extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
                                      shouldShowAddButton: false))
         
         return header
+    }
+    
+    private func presentFailedToOpenAlert(){
+        let alert = UIAlertController(title: "Failed to Open Page",
+                                      message: "Cannot Open the page",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss",
+                                      style: .cancel,
+                                      handler: nil))
+        
+        present(alert, animated: true)
     }
     
 }
