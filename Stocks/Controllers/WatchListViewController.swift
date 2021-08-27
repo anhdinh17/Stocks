@@ -16,6 +16,18 @@ class WatchListViewController: UIViewController {
     // Floating panel
     private var panel: FloatingPanelController?
     
+    // TableView
+    private let tableView: UITableView = {
+        let table = UITableView()
+        return table
+    }()
+    
+    // ????? Model
+    private var watchlistMap: [String : [String]] = [:]
+    
+    // ViewModels
+    private var viewModels: [String] = []
+    
 //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +38,31 @@ class WatchListViewController: UIViewController {
         
         setUpTitleView()
         
+        setUpTableView()
+        
+        setUpWatchlistData()
+        
         setUpFoatingPanel()
     }
     
 //MARK: - Functions
+    private func setUpWatchlistData(){
+        let symbols = PersistenceManager.share.watchList
+        
+        for symbol in symbols {
+            // Fetch market data per symbol
+            watchlistMap[symbol] = ["some string"]
+        }
+        
+        tableView.reloadData()
+    }
+    
+    private func setUpTableView(){
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
     private func setUpSearchController(){
         let resultVC = SearchResultsViewController()
         resultVC.delegate = self // set cai nay để xài delegate func của SearchResultViewController
@@ -155,5 +188,20 @@ extension WatchListViewController: FloatingPanelControllerDelegate {
     func floatingPanelDidChangePosition(_ fpc: FloatingPanelController) {
         // when panel is full screen, the title of the Navbar is hidden
         navigationItem.titleView?.isHidden = fpc.state == .full
+    }
+}
+
+//MARK: - TableView
+extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return watchlistMap.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
