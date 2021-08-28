@@ -22,6 +22,7 @@ final class PersistenceManager {
     }
     
     // watchList is an array of companies symbols
+    // computed variable
     public var watchList: [String] {
         // if user NOT onboarded yet, set it to be True and run setUpDefaults()
         if !hasOnboarded {

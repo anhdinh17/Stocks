@@ -39,12 +39,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func debug(){
-        APICaller.shared.news(for: .company(symbol: "MSFT")) { result in
+//        APICaller.shared.news(for: .company(symbol: "MSFT")) { result in
+//            switch result {
+//            case .success(let news):
+//                print(news.count)
+//            case .failure(let error):
+//                break
+//            }
+//        }
+        
+        APICaller.shared.marketData(for: "AAPL") { result in
             switch result {
-            case .success(let news):
-                print(news.count)
+            case .success(let data):
+                var candleSticks = data.candleSticks
             case .failure(let error):
-                break
+                print(error)
             }
         }
     }

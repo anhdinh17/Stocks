@@ -23,7 +23,7 @@ class WatchListViewController: UIViewController {
     }()
     
     // ????? Model
-    private var watchlistMap: [String : [String]] = [:]
+    private var watchlistMap: [String : [CandleStick]] = [:]
     
     // ViewModels
     private var viewModels: [String] = []
@@ -40,18 +40,37 @@ class WatchListViewController: UIViewController {
         
         setUpTableView()
         
-        setUpWatchlistData()
+        fetchWatchlistData()
         
         setUpFoatingPanel()
     }
     
 //MARK: - Functions
-    private func setUpWatchlistData(){
+    private func fetchWatchlistData(){
+        // "symbols" is an array of companies' symbols
         let symbols = PersistenceManager.share.watchList
         
+        let group = DispatchGroup()
+        
         for symbol in symbols {
-            // Fetch market data per symbol
-            watchlistMap[symbol] = ["some string"]
+            group.enter()
+            
+            APICaller.shared.marketData(for: symbol) { [weak self] result in
+                defer {
+                    group.leave()
+                }
+                
+                switch result {
+                case .success(let data):
+                    // data is an object of MarketDataResponse
+                    
+                    var candleSticks = data.candleSticks
+                    self?.watchlistMap[symbol] = candleSticks
+                    
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
         
         tableView.reloadData()

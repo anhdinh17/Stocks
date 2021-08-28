@@ -27,6 +27,7 @@ final class APICaller {
         case search = "search" // endpoint used for url
         case topStories = "news"
         case companyNews = "company-news"
+        case marketData = "stock/candle"
     }
     
     private enum APIError: Error {
@@ -82,6 +83,36 @@ final class APICaller {
                     completion: completion)
         }
         
+    }
+    
+//MARK: - MarketData
+    
+    // This funcs gets market data for a symbol of stock
+    public func marketData(
+        for symbol: String,
+        numberOfDays: TimeInterval = 7,
+        completion: @escaping (Result<MarketDataResponse,Error>)->Void)
+    {
+        let today = Date()
+            //.addingTimeInterval(-(Constants.day))
+        
+        // 1 day before
+        let prior = today.addingTimeInterval(-(Constants.day * numberOfDays))
+        
+        // Create a url based on url from finnhub: Stock Candles
+        // Pay Attention: "from","to" use TimeInterval form, use Int() to make it whole number.
+        let url = url(for: .marketData,
+                      queryParams: [
+                        "symbol" : symbol,
+                        "resolution" : "1",
+                        "from" : "\(Int(prior.timeIntervalSince1970))",
+                        "to" : "\(Int(today.timeIntervalSince1970))"
+                      ])
+        
+        // request data
+        request(url: url,
+                expecting: MarketDataResponse.self,
+                completion: completion)
     }
 
 //MARK: - URL func
