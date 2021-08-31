@@ -93,7 +93,7 @@ final class APICaller {
         numberOfDays: TimeInterval = 7,
         completion: @escaping (Result<MarketDataResponse,Error>)->Void)
     {
-        let today = Date()
+        let today = Date().addingTimeInterval(-(3600*24))
             //.addingTimeInterval(-(Constants.day))
         
         // 1 day before

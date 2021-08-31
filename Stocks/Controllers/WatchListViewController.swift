@@ -26,7 +26,7 @@ class WatchListViewController: UIViewController {
     private var watchlistMap: [String : [CandleStick]] = [:]
     
     // ViewModels
-    private var viewModels: [String] = []
+    private var viewModels: [WatchListTableViewCell.ViewModel] = []
     
 //MARK: - LifeCycle
     override func viewDidLoad() {
@@ -42,12 +42,15 @@ class WatchListViewController: UIViewController {
         
         fetchWatchlistData()
         
-        setUpFoatingPanel()
+        createViewModels()
+        
+        //setUpFoatingPanel()
     }
     
 //MARK: - Functions
     private func fetchWatchlistData(){
         // "symbols" is an array of companies' symbols
+        // ["FB", "GOOG", "PINS", "AAPL", "MSFT", "AMZN", "WORK", "NVDA", "NKE", "SNAP"]
         let symbols = PersistenceManager.share.watchList
         
         let group = DispatchGroup()
@@ -64,7 +67,11 @@ class WatchListViewController: UIViewController {
                 case .success(let data):
                     // data is an object of MarketDataResponse
                     
+                    // an array of [CandleStick]
                     var candleSticks = data.candleSticks
+                    
+                    // Mình muốn 1 symbol ứng với 1 array của [CandleSticks]
+                    // hay có nghĩa là 1 symbol ứng với 1 data market của nó
                     self?.watchlistMap[symbol] = candleSticks
                     
                 case .failure(let error):
@@ -73,7 +80,53 @@ class WatchListViewController: UIViewController {
             }
         }
         
-        tableView.reloadData()
+        group.notify(queue: .main) { [weak self] in
+            self?.createViewModels()
+            self?.tableView.reloadData()
+        }
+        
+    }
+    
+    private func createViewModels(){
+        var viewModels = [WatchListTableViewCell.ViewModel]()
+        
+        // With each symbol and its [CandleSticks]:
+        for (symbol,candleSticks) in watchlistMap {
+            let changePercentage = getChangePercentage(for: candleSticks)
+            
+            viewModels.append(.init(symbol: symbol,
+                                    // get company name from UserDefaults, we add them in PersistenceManager.
+                                    companyName: UserDefaults.standard.string(forKey: symbol) ?? "Company Name",
+                                    price: getLatestClosingPrice(from: candleSticks),
+                                    changeColor: changePercentage < 0 ? .systemRed : .systemGreen,
+                                    changePercentage: "\(changePercentage)")
+            )
+        }
+        
+        self.viewModels = viewModels
+    }
+    
+    private func getChangePercentage(for data: [CandleStick]) -> Double {
+        let priorDate = Date().addingTimeInterval(-(3600 * 24 * 2))
+        guard let latestClose = data.first?.close,
+              let priorClose = data.first(where: {
+                Calendar.current.isDate($0.date, inSameDayAs: priorDate)
+              })?.close else {
+            return 0
+        }
+        
+        print("Current: \(latestClose) | Prior: \(priorClose)")
+        
+        return 0.0
+    }
+    
+    // get closing price from the first element of [CandleStick]
+    private func getLatestClosingPrice(from data: [CandleStick]) -> String {
+        guard let closingPrice = data.first?.close else {
+            return ""
+        }
+        
+        return "\(closingPrice)"
     }
     
     private func setUpTableView(){

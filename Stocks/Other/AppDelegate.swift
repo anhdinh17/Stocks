@@ -48,14 +48,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            }
 //        }
         
-        APICaller.shared.marketData(for: "AAPL") { result in
-            switch result {
-            case .success(let data):
-                var candleSticks = data.candleSticks
-            case .failure(let error):
-                print(error)
-            }
-        }
+//        var companiesSymbols = PersistenceManager.share.watchList
+//
+//        print(companiesSymbols)
+//
+//        APICaller.shared.marketData(for: "AAPL") { result in
+//            switch result {
+//            case .success(let data):
+//                var candleSticks = data.candleSticks
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+        
+        
+        
     }
 
 }

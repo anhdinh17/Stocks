@@ -67,10 +67,24 @@ final class PersistenceManager {
         // write array ở trên vô UserDefaults key: watchlist ----> "watchlist" variable
         userDefaults.set(symbols, forKey: Constants.watchListKey)
         
+        // Write từng thằng company name vô UserDefaults
         for (symbol,name) in map {
-            // Write từng thằng name vô UserDefaults
             userDefaults.set(name, forKey: symbol)
         }
         
     }
 }
+
+/*
+ "AAPL" : "Apple Inc.",
+ "MSFT" : "Microsoft Corporation",
+ "SNAP" : "Snap Inc.",
+ "GOOG" : "Alphabet",
+ "AMZN" : "Amazon.com, Inc.",
+ "WORK" : "Slack Technologies",
+ "FB" : "Facebook Inc.",
+ "NVDA" : "Nvidia Inc.",
+ "NKE" : "Nike",
+ "PINS" : "Pinterest Inc."
+ 
+ */
