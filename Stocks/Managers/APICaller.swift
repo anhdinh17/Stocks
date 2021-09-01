@@ -127,18 +127,18 @@ final class APICaller {
         // "https://finnhub.io/api/v1/" + "search"
         
         var queryItems = [URLQueryItem]()
-        print("Initial queryItems: \(queryItems)")
+        //print("Initial queryItems: \(queryItems)")
         
         // Add any parameters
         for (name, value) in queryParams {
             // SYNTAX để add dictionary to URLQueryItem
             queryItems.append(.init(name: name, value: value))
         }
-        print("\n queryItems: \(queryItems)")
+        //print("\n queryItems: \(queryItems)")
         
         // Add token to url
         queryItems.append(.init(name: "token", value: Constants.apiKey))
-        print("queryItems after adding token: \(queryItems)")
+        //print("queryItems after adding token: \(queryItems)")
         
         // Convert query items to suffix string
         // map là chuyển mỗi element thành dạng ví dụ q=apple,token=api key bởi vì queriItems chỉ là 1 array của dictionary
@@ -146,7 +146,7 @@ final class APICaller {
         // the example of a url string after being created: In this case, end point is "search", q = Apple https://finnhub.io/api/v1/search?q=Apple&token=c49egvaad3ieskgqt8o0
         urlString += "?" + queryItems.map{"\($0.name)=\($0.value ?? "")"}.joined(separator: "&")
         
-        print("\n The url string created by url func: \(urlString)")
+        //print("\n The url string created by url func: \(urlString)")
         
         return URL(string: urlString)
     }

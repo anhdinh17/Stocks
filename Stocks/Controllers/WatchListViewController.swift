@@ -42,7 +42,7 @@ class WatchListViewController: UIViewController {
         
         fetchWatchlistData()
         
-        //setUpFoatingPanel()
+        setUpFoatingPanel()
     }
     
 //MARK: - Functions
@@ -82,6 +82,8 @@ class WatchListViewController: UIViewController {
             }
         }
         
+        //self?.print("This is WatchListMap: \(watchlistMap)")
+      
         group.notify(queue: .main) { [weak self] in
             self?.createViewModels()
             self?.tableView.reloadData()
@@ -111,12 +113,10 @@ class WatchListViewController: UIViewController {
     private func getChangePercentage(for data: [CandleStick]) -> Double {
         let priorDate = Date().addingTimeInterval(-(3600 * 24 * 2))
         guard let latestClose = data.first?.close,
-              let priorClose = data.first(where: {
-                Calendar.current.isDate($0.date, inSameDayAs: priorDate)
-              })?.close else {
+              let priorClose = data.last?.close else {
             return 0
         }
-        
+        print("data.last = \(data.last)")
         print("Current: \(latestClose) | Prior: \(priorClose)")
         
         return 0.0
@@ -279,3 +279,10 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+
+
+/*
+ (where: {
+   Calendar.current.isDate($0.date, inSameDayAs: priorDate)
+ })?
+ **/
