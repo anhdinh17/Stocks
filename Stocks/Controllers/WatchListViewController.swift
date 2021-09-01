@@ -96,7 +96,7 @@ class WatchListViewController: UIViewController {
         
         // With each symbol and its [CandleSticks]:
         for (symbol,candleSticks) in watchlistMap {
-            let changePercentage = getChangePercentage(for: candleSticks)
+            let changePercentage = getChangePercentage(symbol: symbol, data: candleSticks)
             
             viewModels.append(.init(symbol: symbol,
                                     // get company name from UserDefaults, we add them in PersistenceManager.
@@ -110,16 +110,24 @@ class WatchListViewController: UIViewController {
         self.viewModels = viewModels
     }
     
-    private func getChangePercentage(for data: [CandleStick]) -> Double {
-        let priorDate = Date().addingTimeInterval(-(3600 * 24 * 2))
+    private func getChangePercentage(symbol: String, data: [CandleStick]) -> Double {
+        let latestDate = data[0].date
+        
+        // latest closing price and prior closing price, data from candleSticks
         guard let latestClose = data.first?.close,
-              let priorClose = data.last?.close else {
+              let priorClose = data.first(where: {
+                !Calendar.current.isDate($0.date, inSameDayAs: latestDate)
+              })?.close else {
             return 0
         }
-        print("data.last = \(data.last)")
-        print("Current: \(latestClose) | Prior: \(priorClose)")
         
-        return 0.0
+        print("\(symbol)---Current: \(data[0].date)--\(latestClose) | Prior: \(priorClose)")
+        
+        let diff = 1 - (priorClose/latestClose)
+        
+        print("\(symbol): \(diff)%")
+        
+        return diff
     }
     
     // get closing price from the first element of [CandleStick]
