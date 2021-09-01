@@ -52,7 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //
 //        print(companiesSymbols)
 //
-//        APICaller.shared.marketData(for: "AAPL") { result in
+        
+//        APICaller.shared.marketData(for: "WORK") { result in
 //            switch result {
 //            case .success(let data):
 //                var candleSticks = data.candleSticks

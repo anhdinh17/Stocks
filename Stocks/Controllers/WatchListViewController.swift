@@ -31,7 +31,7 @@ class WatchListViewController: UIViewController {
 //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         view.backgroundColor = .systemBackground
         
         setUpSearchController()
@@ -42,8 +42,6 @@ class WatchListViewController: UIViewController {
         
         fetchWatchlistData()
         
-        createViewModels()
-        
         //setUpFoatingPanel()
     }
     
@@ -51,7 +49,10 @@ class WatchListViewController: UIViewController {
     private func fetchWatchlistData(){
         // "symbols" is an array of companies' symbols
         // ["FB", "GOOG", "PINS", "AAPL", "MSFT", "AMZN", "WORK", "NVDA", "NKE", "SNAP"]
-        let symbols = PersistenceManager.share.watchList
+        var symbols = PersistenceManager.share.watchList
+        symbols = symbols.filter({$0 != "WORK"})
+        
+        print("Symbols: \n\n \(symbols)")
         
         let group = DispatchGroup()
         
@@ -67,6 +68,7 @@ class WatchListViewController: UIViewController {
                 case .success(let data):
                     // data is an object of MarketDataResponse
                     
+                    print(symbol)
                     // an array of [CandleStick]
                     var candleSticks = data.candleSticks
                     

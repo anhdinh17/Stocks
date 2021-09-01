@@ -55,7 +55,6 @@ final class PersistenceManager {
             "SNAP" : "Snap Inc.",
             "GOOG" : "Alphabet",
             "AMZN" : "Amazon.com, Inc.",
-            "WORK" : "Slack Technologies",
             "FB" : "Facebook Inc.",
             "NVDA" : "Nvidia Inc.",
             "NKE" : "Nike",
