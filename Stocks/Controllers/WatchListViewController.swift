@@ -103,9 +103,12 @@ class WatchListViewController: UIViewController {
                                     companyName: UserDefaults.standard.string(forKey: symbol) ?? "Company Name",
                                     price: getLatestClosingPrice(from: candleSticks),
                                     changeColor: changePercentage < 0 ? .systemRed : .systemGreen,
-                                    changePercentage: "\(changePercentage)")
+                                    // sử dụng extension để chuyển 1 Double thành 1 String với 2 chữ số dưới dạng percentage
+                                    changePercentage: String.percentage(from: changePercentage))
             )
         }
+        
+        print(viewModels)
         
         self.viewModels = viewModels
     }
@@ -136,7 +139,7 @@ class WatchListViewController: UIViewController {
             return ""
         }
         
-        return "\(closingPrice)"
+        return String.formatted(number: closingPrice)
     }
     
     private func setUpTableView(){

@@ -8,6 +8,28 @@
 import Foundation
 import UIKit
 
+// extension for NumberFormatter
+extension NumberFormatter {
+    static let percentFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.locale = .current
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 2
+        
+        return formatter
+    }()
+
+    static let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.locale = .current
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        
+        return formatter
+    }()
+}
+
+
 extension String {
     // This func takes in a TimeInterval and returns a String
     // Convert TimeInterval to String, used to convert datetime from JSON (which is TimeInterval) to String(which is the type we want)
@@ -15,6 +37,18 @@ extension String {
     static func string(from timeInterval: TimeInterval) -> String {
         let date = Date(timeIntervalSince1970: timeInterval)
         return DateFormatter.prettyDateFormatter.string(from: date)
+    }
+    
+    // convert a Double to percentage form: n%
+    static func percentage(from double: Double) -> String {
+        let formatter = NumberFormatter.percentFormatter
+        return formatter.string(from: NSNumber(value: double)) ?? "\(double)"
+    }
+    
+    // Convert a Double to a Double with 2 decimal
+    static func formatted(number: Double) -> String {
+        let formatter = NumberFormatter.numberFormatter
+        return formatter.string(from: NSNumber(value: number)) ?? "\(number)"
     }
 }
 
