@@ -1,17 +1,17 @@
-//
-//  WatchListTableViewCell.swift
-//  Stocks
-//
-//  Created by Anh Dinh on 8/30/21.
-//
 
 import UIKit
+
+protocol WatchListTableViewCellDelegate: AnyObject {
+    func didUpdateMaxWidth()
+}
 
 class WatchListTableViewCell: UITableViewCell {
 
     static let identifier = "WatchListTableViewCell"
     
     static let preferredHeight: CGFloat = 60
+    
+    weak var delegate: WatchListTableViewCellDelegate?
     
     struct ViewModel {
         let symbol: String
@@ -25,7 +25,7 @@ class WatchListTableViewCell: UITableViewCell {
     // Symbol Label
     private let symbolLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         label.backgroundColor = .lightGray
         return label
     }()
@@ -37,7 +37,7 @@ class WatchListTableViewCell: UITableViewCell {
         label.backgroundColor = .gray
         return label
     }()
-        
+    
     // Price Label
     private let priceLabel: UILabel = {
         let label = UILabel()
@@ -50,7 +50,10 @@ class WatchListTableViewCell: UITableViewCell {
     private let changeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
+        label.textAlignment = .right
         label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.layer.cornerRadius = 6
+        label.layer.masksToBounds = true
         label.backgroundColor = .gray
         return label
     }()
@@ -97,14 +100,21 @@ class WatchListTableViewCell: UITableViewCell {
                                  width: nameLabel.width,
                                  height: nameLabel.height)
         
-        priceLabel.frame = CGRect(x: contentView.width - 10 - priceLabel.width,
+        let currentWidth = max(max(priceLabel.width, changeLabel.width),
+                               WatchListViewController.maxChangeWidth)
+        if currentWidth > WatchListViewController.maxChangeWidth {
+            WatchListViewController.maxChangeWidth = currentWidth
+            delegate?.didUpdateMaxWidth()
+        }
+        
+        priceLabel.frame = CGRect(x: contentView.width - 10 - currentWidth,
                                   y: 0,
-                                  width: priceLabel.width,
+                                  width: currentWidth,
                                   height: priceLabel.height)
         
-        changeLabel.frame = CGRect(x: contentView.width - 10 - changeLabel.width,
+        changeLabel.frame = CGRect(x: contentView.width - 10 - currentWidth,
                                    y: priceLabel.bottom,
-                                   width: changeLabel.width,
+                                   width: currentWidth,
                                    height: changeLabel.height)
         
         miniChartView.frame = CGRect(x: priceLabel.left - (contentView.width/3) - 5,

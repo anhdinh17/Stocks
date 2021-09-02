@@ -8,6 +8,12 @@
 import UIKit
 
 class StockChartView: UIView {
+    
+    struct ViewModel {
+        let date: [CandleStick]
+        let showLegend: Bool
+        let showAxis: Bool
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)

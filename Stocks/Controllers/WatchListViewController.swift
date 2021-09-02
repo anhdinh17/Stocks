@@ -16,6 +16,8 @@ class WatchListViewController: UIViewController {
     // Floating panel
     private var panel: FloatingPanelController?
     
+    static var maxChangeWidth: CGFloat = 0
+    
     // TableView
     private let tableView: UITableView = {
         let table = UITableView()
@@ -299,6 +301,8 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
             fatalError()
         }
         
+        cell.delegate = self
+        
         cell.configure(with: viewModels[indexPath.row])
         
         return cell
@@ -320,3 +324,10 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
    Calendar.current.isDate($0.date, inSameDayAs: priorDate)
  })?
  **/
+
+//MARK: - Delegate for WatchListTableViewCell
+extension WatchListViewController: WatchListTableViewCellDelegate {
+    func didUpdateMaxWidth() {
+        tableView.reloadData()
+    }
+}
