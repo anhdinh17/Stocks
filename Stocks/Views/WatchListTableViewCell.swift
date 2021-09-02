@@ -11,7 +11,7 @@ class WatchListTableViewCell: UITableViewCell {
 
     static let identifier = "WatchListTableViewCell"
     
-    static let preferredHeight: CGFloat = 14
+    static let preferredHeight: CGFloat = 60
     
     struct ViewModel {
         let symbol: String
@@ -26,6 +26,7 @@ class WatchListTableViewCell: UITableViewCell {
     private let symbolLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.backgroundColor = .lightGray
         return label
     }()
     
@@ -33,6 +34,7 @@ class WatchListTableViewCell: UITableViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.backgroundColor = .gray
         return label
     }()
         
@@ -40,6 +42,7 @@ class WatchListTableViewCell: UITableViewCell {
     private let priceLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.backgroundColor = .gray
         return label
     }()
     
@@ -48,11 +51,17 @@ class WatchListTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .white
         label.font = .systemFont(ofSize: 15, weight: .medium)
+        label.backgroundColor = .gray
         return label
     }()
     
     // Instance of StockChartView
-    private let miniChartView = StockChartView()
+    private let miniChartView: StockChartView = {
+        let chart = StockChartView()
+        chart.backgroundColor = .link
+        
+        return chart
+    }()
 
 //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -71,6 +80,38 @@ class WatchListTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        symbolLabel.sizeToFit()
+        nameLabel.sizeToFit()
+        changeLabel.sizeToFit()
+        priceLabel.sizeToFit()
+        
+        let yStart: CGFloat = (contentView.height - symbolLabel.height - nameLabel.height)/2
+        symbolLabel.frame = CGRect(x: separatorInset.left,
+                                   y: yStart,
+                                   width: symbolLabel.width,
+                                   height: symbolLabel.height)
+        
+        nameLabel.frame = CGRect(x: separatorInset.left,
+                                 y: symbolLabel.bottom,
+                                 width: nameLabel.width,
+                                 height: nameLabel.height)
+        
+        priceLabel.frame = CGRect(x: contentView.width - 10 - priceLabel.width,
+                                  y: 0,
+                                  width: priceLabel.width,
+                                  height: priceLabel.height)
+        
+        changeLabel.frame = CGRect(x: contentView.width - 10 - changeLabel.width,
+                                   y: priceLabel.bottom,
+                                   width: changeLabel.width,
+                                   height: changeLabel.height)
+        
+        miniChartView.frame = CGRect(x: priceLabel.left - (contentView.width/3) - 5,
+                                     y: 6,
+                                     width: contentView.width/3,
+                                     height: contentView.height - 12)
+        
     }
     
     override func prepareForReuse() {

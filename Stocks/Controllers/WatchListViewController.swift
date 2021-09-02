@@ -19,6 +19,8 @@ class WatchListViewController: UIViewController {
     // TableView
     private let tableView: UITableView = {
         let table = UITableView()
+        table.register(WatchListTableViewCell.self,
+                       forCellReuseIdentifier: WatchListTableViewCell.identifier)
         return table
     }()
     
@@ -43,6 +45,12 @@ class WatchListViewController: UIViewController {
         fetchWatchlistData()
         
         setUpFoatingPanel()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        tableView.frame = view.bounds
     }
     
 //MARK: - Functions
@@ -108,16 +116,20 @@ class WatchListViewController: UIViewController {
             )
         }
         
-        print(viewModels)
+        //print(viewModels)
         
         self.viewModels = viewModels
     }
     
+    // get the difference between prior and current closing price.
     private func getChangePercentage(symbol: String, data: [CandleStick]) -> Double {
         let latestDate = data[0].date
         
+        //print("This is data.first: \(data.first)")
+        
         // latest closing price and prior closing price, data from candleSticks
         guard let latestClose = data.first?.close,
+              // chưa hiểu khúc này: Tại sao là data.first để lấy prior?
               let priorClose = data.first(where: {
                 !Calendar.current.isDate($0.date, inSameDayAs: latestDate)
               })?.close else {
@@ -279,11 +291,22 @@ extension WatchListViewController: FloatingPanelControllerDelegate {
 //MARK: - TableView
 extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return watchlistMap.count
+        return viewModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: WatchListTableViewCell.identifier, for: indexPath) as? WatchListTableViewCell else {
+            fatalError()
+        }
+        
+        cell.configure(with: viewModels[indexPath.row])
+        
+        return cell
+    }
+    
+    // Height for cell
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return WatchListTableViewCell.preferredHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
