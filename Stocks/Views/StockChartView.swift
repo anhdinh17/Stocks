@@ -10,7 +10,7 @@ import UIKit
 class StockChartView: UIView {
     
     struct ViewModel {
-        let date: [CandleStick]
+        let data: [Double]
         let showLegend: Bool
         let showAxis: Bool
     }
@@ -28,6 +28,10 @@ class StockChartView: UIView {
     }
     
     func reset(){
+        
+    }
+    
+    func configure(with viewModel: ViewModel){
         
     }
 

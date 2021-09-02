@@ -114,11 +114,16 @@ class WatchListViewController: UIViewController {
                                     price: getLatestClosingPrice(from: candleSticks),
                                     changeColor: changePercentage < 0 ? .systemRed : .systemGreen,
                                     // sử dụng extension để chuyển 1 Double thành 1 String với 2 chữ số dưới dạng percentage
-                                    changePercentage: String.percentage(from: changePercentage))
+                                    changePercentage: String.percentage(from: changePercentage),
+                                    chartViewModel: .init(data: candleSticks.reversed().map{$0.close},
+                                                          showLegend: false,
+                                                          showAxis: false))
             )
         }
         
-        //print(viewModels)
+        var test = watchlistMap["AAPL"]
+        test?.reversed().map{$0.close}
+        print("This is test: \(test)")
         
         self.viewModels = viewModels
     }

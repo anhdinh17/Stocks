@@ -19,7 +19,7 @@ class WatchListTableViewCell: UITableViewCell {
         let price: String // fromatted
         let changeColor: UIColor
         let changePercentage: String // formatted
-        // let chartViewModel: StockChartView.ViewModel
+        let chartViewModel: StockChartView.ViewModel
     }
     
     // Symbol Label
@@ -62,6 +62,7 @@ class WatchListTableViewCell: UITableViewCell {
     private let miniChartView: StockChartView = {
         let chart = StockChartView()
         chart.backgroundColor = .link
+        chart.clipsToBounds = true
         
         return chart
     }()
@@ -69,6 +70,8 @@ class WatchListTableViewCell: UITableViewCell {
 //MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.clipsToBounds = true
         
         addSubviews(symbolLabel,
                     nameLabel,
@@ -108,7 +111,7 @@ class WatchListTableViewCell: UITableViewCell {
         }
         
         priceLabel.frame = CGRect(x: contentView.width - 10 - currentWidth,
-                                  y: 0,
+                                  y: (contentView.height - priceLabel.height - changeLabel.height)/2,
                                   width: currentWidth,
                                   height: priceLabel.height)
         
