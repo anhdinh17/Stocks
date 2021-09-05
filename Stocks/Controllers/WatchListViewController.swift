@@ -62,13 +62,14 @@ class WatchListViewController: UIViewController {
         var symbols = PersistenceManager.share.watchList
         symbols = symbols.filter({$0 != "WORK"})
         
-        print("Symbols: \n\n \(symbols)")
+        print("Symbols:\(symbols)")
         
         let group = DispatchGroup()
         
         for symbol in symbols {
             group.enter()
             
+            // Get market data for each symbol
             APICaller.shared.marketData(for: symbol) { [weak self] result in
                 defer {
                     group.leave()
@@ -121,9 +122,9 @@ class WatchListViewController: UIViewController {
             )
         }
         
-        var test = watchlistMap["AAPL"]
-        test?.reversed().map{$0.close}
-        print("This is test: \(test)")
+//        var test = watchlistMap["AAPL"]
+//        test?.reversed().map{$0.close}
+//        print("This is test: \(test)")
         
         self.viewModels = viewModels
     }
@@ -320,6 +321,31 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    // Swipe to delete cell: 3 func
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            // Update Persistence
+            PersistenceManager.share.removeFromWatchlist(symbol: viewModels[indexPath.row].symbol)
+            
+            // Update viewModels array
+            viewModels.remove(at: indexPath.row)
+            
+            // Delete Row
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+            tableView.endUpdates()
+        }
     }
 }
 

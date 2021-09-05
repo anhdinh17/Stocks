@@ -38,8 +38,21 @@ final class PersistenceManager {
         
     }
     
-    public func removeFromWatchlist(){
+    public func removeFromWatchlist(symbol: String){
+        var newList = [String]()
         
+        print("\n Deleting: \(symbol)")
+        
+        userDefaults.set(nil,forKey: symbol)
+        
+        // remove the symbol from watchList
+        for item in watchList where item != symbol {
+            print("\n Left: \(item)")
+            newList.append(item)
+        }
+        
+        // we set a new array of symbols in UserDefaults with the key: "watchlist"
+        userDefaults.set(newList,forKey: Constants.watchListKey)
     }
     
     private var hasOnboarded: Bool {
