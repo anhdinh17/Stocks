@@ -32,6 +32,9 @@ class WatchListViewController: UIViewController {
     // ViewModels
     private var viewModels: [WatchListTableViewCell.ViewModel] = []
     
+    // Observer
+    private var observer: NSObjectProtocol?
+    
 //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +50,9 @@ class WatchListViewController: UIViewController {
         fetchWatchlistData()
         
         setUpFoatingPanel()
+        
+        setUpObserver()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -56,6 +62,7 @@ class WatchListViewController: UIViewController {
     }
     
 //MARK: - Functions
+    
     private func fetchWatchlistData(){
         // "symbols" is an array of companies' symbols
         // ["FB", "GOOG", "PINS", "AAPL", "MSFT", "AMZN", "WORK", "NVDA", "NKE", "SNAP"]
@@ -66,7 +73,7 @@ class WatchListViewController: UIViewController {
         
         let group = DispatchGroup()
         
-        for symbol in symbols {
+        for symbol in symbols where watchlistMap[symbol] == nil {
             group.enter()
             
             // Get market data for each symbol
@@ -160,6 +167,15 @@ class WatchListViewController: UIViewController {
         }
         
         return String.formatted(number: closingPrice)
+    }
+    
+    private func setUpObserver(){
+        observer = NotificationCenter.default.addObserver(forName: .didAddToWatchList,
+                                                          object: nil,
+                                                          queue: .main, using: { [weak self]_ in
+                                                            self?.viewModels.removeAll()
+                                                            self?.fetchWatchlistData()
+                                                          })
     }
     
     private func setUpTableView(){
