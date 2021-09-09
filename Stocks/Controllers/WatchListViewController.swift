@@ -73,6 +73,7 @@ class WatchListViewController: UIViewController {
         
         let group = DispatchGroup()
         
+        // API call for symbols which don't have data yet.
         for symbol in symbols where watchlistMap[symbol] == nil {
             group.enter()
             
@@ -170,6 +171,7 @@ class WatchListViewController: UIViewController {
     }
     
     private func setUpObserver(){
+        // wait for notification of ".didAddToWatchList", then execute closure.
         observer = NotificationCenter.default.addObserver(forName: .didAddToWatchList,
                                                           object: nil,
                                                           queue: .main, using: { [weak self]_ in
@@ -295,7 +297,8 @@ extension WatchListViewController: SearchResultsViewControllerDelegate {
         */
        
         // Cách 2:
-        let vc = StockDetailsViewController()
+        let vc = StockDetailsViewController(symbol: searchResult.displaySymbol,
+                                            companyName: searchResult.description)
         vc.title = searchResult.description
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true, completion: nil)
@@ -335,8 +338,20 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
         return WatchListTableViewCell.preferredHeight
     }
     
+    // Select a cell
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // Get the instance from the cell row
+        // viewModel is 1 instance of WatchListTableViewCell.ViewModel
+        let viewModel = viewModels[indexPath.row]
+    
+        let vc = StockDetailsViewController(symbol: viewModel.symbol,
+                                            companyName: viewModel.companyName,
+                                            candleStickData: watchlistMap[viewModel.symbol] ?? [])
+        vc.title = "Stock Details"
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC,animated: true)
     }
     
     // Swipe to delete cell: 3 func

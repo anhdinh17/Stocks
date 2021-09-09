@@ -40,7 +40,8 @@ final class PersistenceManager {
         
         userDefaults.set(current,forKey: Constants.watchListKey)
         
-        // Using Notification:
+        // Using Notification
+        // post to Notification Center to let it know something happens.
         NotificationCenter.default.post(name: .didAddToWatchList, object: nil)
     }
     
