@@ -50,11 +50,15 @@ class StockDetailsViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
         
+        title = companyName
+        
         setUpTable()
         
         fetchFinancialData()
         
         fetchNews()
+        
+        setUpCloseButton()
     }
     
     override func viewDidLayoutSubviews() {
@@ -68,6 +72,12 @@ class StockDetailsViewController: UIViewController {
         view.addSubview(table)
         table.delegate = self
         table.dataSource = self
+        
+        // create a view above table above table content, it's above Header of the tableView.
+        table.tableHeaderView = UIView(frame: CGRect(x: 0,
+                                                     y: 0,
+                                                     width: view.width,
+                                                     height: (view.width * 0.7) + 100))
     }
     
     private func fetchFinancialData(){
@@ -93,6 +103,16 @@ class StockDetailsViewController: UIViewController {
     
     private func renderChart(){
         
+    }
+    
+    // close button on top right
+    private func setUpCloseButton(){
+        // add a close button to nav bar
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(didTapClose))
+    }
+    
+    @objc private func didTapClose(){
+        dismiss(animated: true, completion: nil)
     }
 }
 
