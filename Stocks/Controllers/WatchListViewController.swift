@@ -347,6 +347,7 @@ extension WatchListViewController: UITableViewDelegate, UITableViewDataSource {
         // viewModel is 1 instance of WatchListTableViewCell.ViewModel
         let viewModel = viewModels[indexPath.row]
     
+        // go to StockDetailsVC when clicking on a cell
         let vc = StockDetailsViewController(symbol: viewModel.symbol,
                                             companyName: viewModel.companyName,
                                             candleStickData: watchlistMap[viewModel.symbol] ?? [])

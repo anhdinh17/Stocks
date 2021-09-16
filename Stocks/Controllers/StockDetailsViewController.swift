@@ -21,7 +21,7 @@ class StockDetailsViewController: UIViewController {
                        forHeaderFooterViewReuseIdentifier: NewsHeaderView.identifier)
         
         // register custom cell
-        table.register(NewsStoryTableViewCell.self, forHeaderFooterViewReuseIdentifier: NewsStoryTableViewCell.identifier)
+        table.register(NewsStoryTableViewCell.self, forCellReuseIdentifier: NewsStoryTableViewCell.identifier)
         
         return table
     }()
@@ -73,8 +73,21 @@ class StockDetailsViewController: UIViewController {
         renderChart()
     }
     
+    // get news for company symbol
     private func fetchNews(){
-        
+        // dùng .company(symbol: symbol) vì mình muốn get the news for this specific company
+        APICaller.shared.news(for: .company(symbol: symbol)) { [weak self] result in
+            switch result {
+            case .success(let stories):
+                DispatchQueue.main.async {
+                    // set this class stories = stories from closure
+                    self?.stories = stories
+                    self?.table.reloadData()
+                }
+            case .failure(let errror):
+                print(errror)
+            }
+        }
     }
     
     private func renderChart(){
@@ -136,6 +149,5 @@ extension StockDetailsViewController: NewsHeaderViewDelegate {
     func newsHeaderViewDidTapAddButton(_ headerView: NewsHeaderView) {
         // Add to WatchList
     }
-    
-    
+
 }
