@@ -283,7 +283,8 @@ extension WatchListViewController: UISearchResultsUpdating {
 
 //MARK: - Protocol Func from SearchResultsViewController
 extension WatchListViewController: SearchResultsViewControllerDelegate {
-    
+    // func này là khi mình search và click vào 1 result trên table của search
+    // go to StockDetailsVC
     func searchResultsViewControllerDelegate(searchResult: SearchResult) {
         // Resign keyboard:
         // because search bar is in navigation bar, so we use this syntax
