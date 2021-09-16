@@ -125,7 +125,7 @@ extension NewsViewController: UITableViewDataSource, UITableViewDelegate {
         return NewsStoryTableViewCell.preferredHeight
     }
     
-    // Select 1 cell
+    // Select 1 cell and go to the page of the news using SafariServices.
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         

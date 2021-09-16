@@ -5,6 +5,7 @@
 //  Created by Anh Dinh on 7/24/21.
 //
 
+import SafariServices
 import UIKit
 
 class StockDetailsViewController: UIViewController {
@@ -138,9 +139,15 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         return NewsHeaderView.preferredHeight
     }
     
-    // select a cell
+    // select a cell to go to the page of the news
+    // Using SafariServices
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard let url = URL(string: stories[indexPath.row].url) else {
+            return
+        }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
     }
 }
 
