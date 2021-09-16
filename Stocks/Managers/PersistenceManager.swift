@@ -34,6 +34,12 @@ final class PersistenceManager {
         return userDefaults.stringArray(forKey: Constants.watchListKey) ?? [String]()
     }
     
+    // check if "watchlist" contains the specific symbol
+    public func watchlistContains(symbol: String) -> Bool {
+        return watchList.contains(symbol)
+    }
+    
+    // Add a symbol to watchlist
     public func addToWatchlist(symbol: String, companyName: String) {
         var current = watchList
         current.append(symbol)
@@ -45,6 +51,7 @@ final class PersistenceManager {
         NotificationCenter.default.post(name: .didAddToWatchList, object: nil)
     }
     
+    // remove a symbol from watchlist array
     public func removeFromWatchlist(symbol: String){
         var newList = [String]()
     
@@ -91,16 +98,3 @@ final class PersistenceManager {
     }
 }
 
-/*
- "AAPL" : "Apple Inc.",
- "MSFT" : "Microsoft Corporation",
- "SNAP" : "Snap Inc.",
- "GOOG" : "Alphabet",
- "AMZN" : "Amazon.com, Inc.",
- "WORK" : "Slack Technologies",
- "FB" : "Facebook Inc.",
- "NVDA" : "Nvidia Inc.",
- "NKE" : "Nike",
- "PINS" : "Pinterest Inc."
- 
- */

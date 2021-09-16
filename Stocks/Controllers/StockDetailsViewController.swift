@@ -129,7 +129,8 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
         
         header.delegate = self
         header.configure(with: .init(title: symbol.uppercased(),
-                                     shouldShowAddButton: true))
+                                     // if watchlist contains this symbol, we hide the add button
+                                     shouldShowAddButton: !PersistenceManager.share.watchlistContains(symbol: symbol)))
         
         return header
     }
@@ -153,8 +154,24 @@ extension StockDetailsViewController: UITableViewDelegate, UITableViewDataSource
 
 //MARK: - Header
 extension StockDetailsViewController: NewsHeaderViewDelegate {
+    
+    // this delegate func: when users click on add button, this adds the symbol to watchlist and hide the button
     func newsHeaderViewDidTapAddButton(_ headerView: NewsHeaderView) {
-        // Add to WatchList
+        // hide button
+        headerView.button.isHidden = true
+        
+        // add to watchlist
+        PersistenceManager.share.addToWatchlist(symbol: symbol,
+                                                companyName: companyName)
+        
+        // alert to inform that symbol added to watchlist
+        let alert = UIAlertController(title: "Added to Wathclist",
+                                      message: "\(companyName) has been added to your watchlist",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss",
+                                      style: .cancel,
+                                      handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 
 }
