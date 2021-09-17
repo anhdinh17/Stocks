@@ -28,6 +28,7 @@ final class APICaller {
         case topStories = "news"
         case companyNews = "company-news"
         case marketData = "stock/candle"
+        case financials = "stock/metric"
     }
     
     private enum APIError: Error {
@@ -114,6 +115,26 @@ final class APICaller {
                 completion: completion)
     }
 
+//MARK: - Metrics function
+    /*
+    This func is to call API request to get data for Metrics for each symbol
+    */
+    public func financialmetrics(
+        for symbol: String,
+        completion: @escaping(Result<FinancialMetricsResponse,Error>) -> Void)
+    {
+        // create url for rerquest, check documents on finnhub.
+        let url = url(for: .financials,
+                      queryParams: [
+                        "symbol":symbol,
+                        "metric": "all"])
+        
+        // request data
+        request(url: url,
+                expecting: FinancialMetricsResponse.self,
+                completion: completion)
+    }
+    
 //MARK: - URL func
     /* this func is to create a url string
      Có thể xem cả func này là công thức để tạo url string

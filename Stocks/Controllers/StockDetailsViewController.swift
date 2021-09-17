@@ -80,8 +80,31 @@ class StockDetailsViewController: UIViewController {
                                                      height: (view.width * 0.7) + 100))
     }
     
+    
     private func fetchFinancialData(){
-        renderChart()
+        let group = DispatchGroup()
+        
+        // get metrics for specific symbol to display it in the chart area
+        group.enter()
+        APICaller.shared.financialmetrics(for: symbol) { [weak self] result in
+            defer{
+                group.leave()
+            }
+            
+            switch result {
+            // response is 1 instance of object FinancialMetricsResponse
+            case .success(let response):
+                let metrics = response.metric
+                print(metrics)
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
+        group.notify(queue: .main) {[weak self] in
+            self?.renderChart()
+        }
+
     }
     
     // get news for company symbol
@@ -93,6 +116,7 @@ class StockDetailsViewController: UIViewController {
                 DispatchQueue.main.async {
                     // set this class stories = stories from closure
                     self?.stories = stories
+                    // reload tableView to display UI with "stories" array
                     self?.table.reloadData()
                 }
             case .failure(let errror):
@@ -102,7 +126,14 @@ class StockDetailsViewController: UIViewController {
     }
     
     private func renderChart(){
+        let headerView = StockDetailHeaderView(frame: CGRect(x: 0,
+                                                             y: 0,
+                                                             width: view.width,
+                                                             height: (view.width * 0.7) + 100))
+        headerView.backgroundColor = .link
         
+        // let tableHeaderView = thằng headerView này
+        table.tableHeaderView = headerView
     }
     
     // close button on top right

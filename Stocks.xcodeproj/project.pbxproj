@@ -15,6 +15,8 @@
 		677C465E26AD199600954DD9 /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677C465D26AD199600954DD9 /* NewsViewController.swift */; };
 		677C466026AD19A500954DD9 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677C465F26AD19A500954DD9 /* SearchResultsViewController.swift */; };
 		677C466226AD19BD00954DD9 /* StockDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677C466126AD19BD00954DD9 /* StockDetailsViewController.swift */; };
+		6797958926F52B6900A73897 /* FinancialMetricsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6797958826F52B6900A73897 /* FinancialMetricsResponse.swift */; };
+		6797958B26F53B9C00A73897 /* StockDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6797958A26F53B9C00A73897 /* StockDetailHeaderView.swift */; };
 		67A9D0DA26AE76FF00B6CBA2 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A9D0D926AE76FF00B6CBA2 /* APICaller.swift */; };
 		67A9D0DC26AE774800B6CBA2 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A9D0DB26AE774800B6CBA2 /* PersistenceManager.swift */; };
 		67A9D0DE26AE778B00B6CBA2 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A9D0DD26AE778B00B6CBA2 /* HapticsManager.swift */; };
@@ -42,6 +44,8 @@
 		677C465D26AD199600954DD9 /* NewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
 		677C465F26AD19A500954DD9 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		677C466126AD19BD00954DD9 /* StockDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailsViewController.swift; sourceTree = "<group>"; };
+		6797958826F52B6900A73897 /* FinancialMetricsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialMetricsResponse.swift; sourceTree = "<group>"; };
+		6797958A26F53B9C00A73897 /* StockDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailHeaderView.swift; sourceTree = "<group>"; };
 		67A9D0D926AE76FF00B6CBA2 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		67A9D0DB26AE774800B6CBA2 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		67A9D0DD26AE778B00B6CBA2 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
@@ -116,6 +120,7 @@
 				67D4C6C526C331A900186786 /* SearchResonse.swift */,
 				67D7F43826D3522800A2FBF6 /* NewsStory.swift */,
 				67D7F43C26D8A8EE00A2FBF6 /* MarketDataResponse.swift */,
+				6797958826F52B6900A73897 /* FinancialMetricsResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -129,6 +134,7 @@
 				67D7F43A26D5597A00A2FBF6 /* NewsStoryTableViewCell.swift */,
 				67BF0EC726DDD24B005C5BE4 /* WatchListTableViewCell.swift */,
 				67BF0EC926DDD5F0005C5BE4 /* StockChartView.swift */,
+				6797958A26F53B9C00A73897 /* StockDetailHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -291,6 +297,7 @@
 				67D4C6C426C1BA3800186786 /* SearchResultTableViewCell.swift in Sources */,
 				677C466226AD19BD00954DD9 /* StockDetailsViewController.swift in Sources */,
 				677C465E26AD199600954DD9 /* NewsViewController.swift in Sources */,
+				6797958926F52B6900A73897 /* FinancialMetricsResponse.swift in Sources */,
 				677C464926AD184A00954DD9 /* WatchListViewController.swift in Sources */,
 				67A9D0DC26AE774800B6CBA2 /* PersistenceManager.swift in Sources */,
 				67D7F43926D3522800A2FBF6 /* NewsStory.swift in Sources */,
@@ -302,6 +309,7 @@
 				67D7F43726D0663300A2FBF6 /* NewsHeaderView.swift in Sources */,
 				677C464526AD184A00954DD9 /* AppDelegate.swift in Sources */,
 				677C464726AD184A00954DD9 /* SceneDelegate.swift in Sources */,
+				6797958B26F53B9C00A73897 /* StockDetailHeaderView.swift in Sources */,
 				67BF0EC826DDD24B005C5BE4 /* WatchListTableViewCell.swift in Sources */,
 				677C466026AD19A500954DD9 /* SearchResultsViewController.swift in Sources */,
 			);
