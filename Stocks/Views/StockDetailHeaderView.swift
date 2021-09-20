@@ -9,6 +9,12 @@ import UIKit
 
 class StockDetailHeaderView: UIView {
 
+    // array of viewModel of MetricCollectionViewCell
+    // xài theo công thức tạo table/cell
+    private var metricViewModels = [MetricCollectionViewCell.ViewModel]()
+    
+    // Subviews
+    
     // ChartView
     private let chartView = StockChartView()
     
@@ -19,7 +25,11 @@ class StockDetailHeaderView: UIView {
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .red
+        
+        // Register custom cell
+        collectionView.register(MetricCollectionViewCell.self,
+                                forCellWithReuseIdentifier: MetricCollectionViewCell.identifier)
+        
         return collectionView
     }()
 
@@ -46,8 +56,11 @@ class StockDetailHeaderView: UIView {
     }
     
 //MARK: - Funcs
-    public func configure(chartViewModel: StockChartView.ViewModel){
-        
+    public func configure(chartViewModel: StockChartView.ViewModel,
+                          metricViewModels: [MetricCollectionViewCell.ViewModel]){
+        // Update Chart
+        self.metricViewModels = metricViewModels
+        collectionView.reloadData()
     }
     
 }
@@ -55,16 +68,24 @@ class StockDetailHeaderView: UIView {
 //MARK: - CollectionView
 extension StockDetailHeaderView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return metricViewModels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return UICollectionViewCell()
+        
+        // viewModel is 1 instance of MetricCollectionViewCell.ViewModel
+        let viewModel = metricViewModels[indexPath.row]
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MetricCollectionViewCell.identifier,
+                                                            for: indexPath) as? MetricCollectionViewCell else {
+            fatalError()
+        }
+        
+        cell.configure(with: viewModel)
+        
+        return cell
     }
     
     // size of the cell

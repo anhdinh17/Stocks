@@ -126,6 +126,7 @@ class StockDetailsViewController: UIViewController {
     }
     
     private func renderChart(){
+        // Add StockDetailHeaderView to this ViewController, StockDetailHeaderView is an UIView.
         let headerView = StockDetailHeaderView(frame: CGRect(x: 0,
                                                              y: 0,
                                                              width: view.width,
