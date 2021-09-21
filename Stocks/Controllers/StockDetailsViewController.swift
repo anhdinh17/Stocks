@@ -9,7 +9,8 @@ import SafariServices
 import UIKit
 
 class StockDetailsViewController: UIViewController {
-    
+
+//MARK: - Properties
     private let symbol: String
     private let companyName: String
     private var candleStickData: [CandleStick] = []
@@ -29,6 +30,8 @@ class StockDetailsViewController: UIViewController {
     
     private var stories = [NewsStory]()
 
+    private var metrics: Metrics?
+    
 //MARK: - Init
     init(symbol: String,
          companyName: String,
@@ -80,7 +83,7 @@ class StockDetailsViewController: UIViewController {
                                                      height: (view.width * 0.7) + 100))
     }
     
-    
+    // Get metric data
     private func fetchFinancialData(){
         let group = DispatchGroup()
         
@@ -95,7 +98,8 @@ class StockDetailsViewController: UIViewController {
             // response is 1 instance of object FinancialMetricsResponse
             case .success(let response):
                 let metrics = response.metric
-                print(metrics)
+                // let this class "metrics" = this metrics above
+                self?.metrics = metrics
             case .failure(let error):
                 print(error)
             }
@@ -131,7 +135,19 @@ class StockDetailsViewController: UIViewController {
                                                              y: 0,
                                                              width: view.width,
                                                              height: (view.width * 0.7) + 100))
-        headerView.backgroundColor = .link
+        
+        // create an empty array of MetricCollectionViewCell.ViewModel
+        var viewModels = [MetricCollectionViewCell.ViewModel]()
+        if let metrics = metrics {
+            viewModels.append(.init(name: "52W High", value: "\(metrics.AnnualWeekHigh)"))
+            viewModels.append(.init(name: "52W Low", value: "\(metrics.AnnualWeekLow)"))
+            viewModels.append(.init(name: "52W Return", value: "\(metrics.AnnualWeekPriceReturnDaily)"))
+            viewModels.append(.init(name: "Beta", value: "\(metrics.beta)"))
+            viewModels.append(.init(name: "10D Vol", value: "\(metrics.TenDayAverageTradingVolume)"))
+        }
+        
+        headerView.configure(chartViewModel: .init(data: [], showLegend: false, showAxis: false),
+                             metricViewModels: viewModels)
         
         // let tableHeaderView = thằng headerView này
         table.tableHeaderView = headerView

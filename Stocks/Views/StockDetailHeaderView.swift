@@ -30,6 +30,7 @@ class StockDetailHeaderView: UIView {
         collectionView.register(MetricCollectionViewCell.self,
                                 forCellWithReuseIdentifier: MetricCollectionViewCell.identifier)
         
+        collectionView.backgroundColor = .systemBackground
         return collectionView
     }()
 
@@ -73,7 +74,6 @@ extension StockDetailHeaderView: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
         
         // viewModel is 1 instance of MetricCollectionViewCell.ViewModel
         let viewModel = metricViewModels[indexPath.row]
@@ -90,6 +90,6 @@ extension StockDetailHeaderView: UICollectionViewDelegate, UICollectionViewDataS
     
     // size of the cell
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: width/2, height: height/3)
+        return CGSize(width: width/2, height: 100/3)
     }
 }
