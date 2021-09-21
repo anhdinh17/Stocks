@@ -87,6 +87,23 @@ class StockDetailsViewController: UIViewController {
     private func fetchFinancialData(){
         let group = DispatchGroup()
         
+        // fetch candle sticks if needed
+        if candleStickData.isEmpty{
+            group.enter()
+            APICaller.shared.marketData(for: symbol) { [weak self] result in
+                defer {
+                    group.leave()
+                }
+                
+                switch result {
+                case .success(let response):
+                    self?.candleStickData = response.candleSticks
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+        
         // get metrics for specific symbol to display it in the chart area
         group.enter()
         APICaller.shared.financialmetrics(for: symbol) { [weak self] result in
@@ -129,15 +146,20 @@ class StockDetailsViewController: UIViewController {
         }
     }
     
+    // header, where the chart is
     private func renderChart(){
         // Add StockDetailHeaderView to this ViewController, StockDetailHeaderView is an UIView.
+        // set the frame to be the same as table.tableHeaderView
         let headerView = StockDetailHeaderView(frame: CGRect(x: 0,
                                                              y: 0,
                                                              width: view.width,
                                                              height: (view.width * 0.7) + 100))
         
         // create an empty array of MetricCollectionViewCell.ViewModel
+        // why we have to do this? Vì theo công thức, muốn chạy collectionView Cell thì phải có array của MetricCollectionViewCell.ViewModel, có array này rồi thì collectionView.reloadData() sẽ chạy đươc UI của từng cell
         var viewModels = [MetricCollectionViewCell.ViewModel]()
+        
+        // lấy data từ metrics
         if let metrics = metrics {
             viewModels.append(.init(name: "52W High", value: "\(metrics.AnnualWeekHigh)"))
             viewModels.append(.init(name: "52W Low", value: "\(metrics.AnnualWeekLow)"))
@@ -146,7 +168,10 @@ class StockDetailsViewController: UIViewController {
             viewModels.append(.init(name: "10D Vol", value: "\(metrics.TenDayAverageTradingVolume)"))
         }
         
-        headerView.configure(chartViewModel: .init(data: [], showLegend: false, showAxis: false),
+        // configure to reload collectionView with an array of viewModels above
+        headerView.configure(chartViewModel: .init(data: candleStickData.reversed().map{$0.close},
+                                                   showLegend: true,
+                                                   showAxis: true),
                              metricViewModels: viewModels)
         
         // let tableHeaderView = thằng headerView này

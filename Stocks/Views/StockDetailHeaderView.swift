@@ -59,6 +59,9 @@ class StockDetailHeaderView: UIView {
 //MARK: - Funcs
     public func configure(chartViewModel: StockChartView.ViewModel,
                           metricViewModels: [MetricCollectionViewCell.ViewModel]){
+        
+        chartView.configure(with: chartViewModel)
+        
         // Update Chart
         self.metricViewModels = metricViewModels
         collectionView.reloadData()
@@ -83,12 +86,21 @@ extension StockDetailHeaderView: UICollectionViewDelegate, UICollectionViewDataS
             fatalError()
         }
         
+        var colorArray:[UIColor] = [
+            UIColor.red,
+            UIColor.blue,
+            UIColor.yellow,
+            UIColor.link,
+            UIColor.gray
+        ]
+
+        cell.backgroundColor = colorArray.randomElement()
         cell.configure(with: viewModel)
         
         return cell
     }
     
-    // size of the cell
+    // size of 1 cell/1 item
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: width/2, height: 100/3)
     }
