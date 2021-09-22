@@ -168,14 +168,40 @@ class StockDetailsViewController: UIViewController {
             viewModels.append(.init(name: "10D Vol", value: "\(metrics.TenDayAverageTradingVolume)"))
         }
         
+        let change = getChangePercentage(symbol: symbol, data: candleStickData)
+        
         // configure to reload collectionView with an array of viewModels above
         headerView.configure(chartViewModel: .init(data: candleStickData.reversed().map{$0.close},
                                                    showLegend: true,
-                                                   showAxis: true),
+                                                   showAxis: true,
+                                                   fillColor: change < 0 ? .systemRed : .systemGreen),
                              metricViewModels: viewModels)
         
         // let tableHeaderView = thằng headerView này
         table.tableHeaderView = headerView
+    }
+    
+    private func getChangePercentage(symbol: String, data: [CandleStick]) -> Double {
+        let latestDate = data[0].date
+        
+        //print("This is data.first: \(data.first)")
+        
+        // latest closing price and prior closing price, data from candleSticks
+        guard let latestClose = data.first?.close,
+              // chưa hiểu khúc này: Tại sao là data.first để lấy prior?
+              let priorClose = data.first(where: {
+                !Calendar.current.isDate($0.date, inSameDayAs: latestDate)
+              })?.close else {
+            return 0
+        }
+        
+        print("\(symbol)---Current: \(data[0].date)--\(latestClose) | Prior: \(priorClose)")
+        
+        let diff = 1 - (priorClose/latestClose)
+        
+        print("\(symbol): \(diff)%")
+        
+        return diff
     }
     
     // close button on top right
